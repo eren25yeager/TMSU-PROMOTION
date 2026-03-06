@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ترويج الانضمام - اتحاد طلاب تحيا مصر</title>
+    <title>الترويج للانضمام - اتحاد طلاب تحيا مصر</title>
     <!-- تضمين مكتبة Tailwind CSS للتصميم -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- تضمين خطوط جوجل (Cairo) -->
@@ -13,16 +13,16 @@
             font-family: 'Cairo', sans-serif;
             background-color: #f3f4f6;
         }
-        /* تأثيرات التحميل للصورة */
         .image-preview-container {
             position: relative;
             background-image: linear-gradient(45deg, #ccc 25%, transparent 25%), linear-gradient(-45deg, #ccc 25%, transparent 25%), linear-gradient(45deg, transparent 75%, #ccc 75%), linear-gradient(-45deg, transparent 75%, #ccc 75%);
             background-size: 20px 20px;
             background-position: 0 0, 0 10px, 10px -10px, -10px 0px;
         }
-        /* تخصيص شكل المؤشرات (Sliders) */
-        input[type=range] {
-            cursor: pointer;
+        /* منع تمرير الشاشة عند سحب العناصر على الـ Canvas */
+        #resultCanvas {
+            touch-action: none; 
+            cursor: default;
         }
     </style>
 </head>
@@ -30,15 +30,18 @@
 
     <div class="max-w-6xl mx-auto">
         <!-- ترويسة الصفحة -->
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-black text-red-700 mb-2"> ترويج الانضمام </h1>
+        <header class="text-center mb-6 lg:mb-8">
+            <h1 class="text-3xl md:text-4xl font-black text-red-700 mb-2"> منصة الترويج للانضمام</h1>
             <p class="text-gray-600 text-lg">اتحاد طلاب تحيا مصر </p>
+            <p class="text-sm text-blue-600 font-bold mt-2 bg-blue-50 inline-block px-4 py-2 rounded-full ring-1 ring-blue-200">
+                ✨ المحرر الذكي: انقر على الصورة أو النصوص لتحديدها، واسحب الزوايا لتكبيرها أو تصغيرها!
+            </p>
         </header>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
             
-            <!-- قسم إدخال البيانات والتحكم -->
-            <div class="lg:col-span-5 space-y-6">
+            <!-- قسم إدخال البيانات -->
+            <div class="lg:col-span-5 space-y-6 order-2 lg:order-1">
                 <div class="bg-white p-6 rounded-2xl shadow-lg border-t-4 border-red-600">
                     <h2 class="text-xl font-bold mb-4 text-gray-800">بيانات العضو</h2>
                     
@@ -83,85 +86,8 @@
                         </div>
                     </div>
 
-                    <!-- ======= لوحة الإعدادات المتقدمة (التحكم اليدوي) ======= -->
-                    <div class="mt-6 border-t border-gray-200 pt-4">
-                        <button id="toggleAdvancedBtn" type="button" class="flex items-center justify-between w-full text-blue-700 font-bold hover:text-blue-800 transition focus:outline-none">
-                            <span class="flex items-center"><svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg> 
-                                إعدادات متقدمة (تعديل الأماكن والأحجام)
-                            </span>
-                            <svg id="advancedIcon" class="w-5 h-5 transform transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                        </button>
-                        
-                        <div id="advancedPanel" class="hidden mt-4 space-y-4">
-                            <!-- إعدادات الصورة -->
-                            <div class="bg-blue-50 p-4 rounded-lg border border-blue-100">
-                                <h3 class="font-bold text-sm text-blue-800 mb-3 border-b border-blue-200 pb-1">🖼️ أبعاد ومكان الصورة</h3>
-                                <div class="space-y-3 text-xs font-semibold text-gray-700">
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-24">موضع (يمين/يسار):</span>
-                                        <input type="range" id="ctrlPhotoX" min="0" max="100" step="0.2" value="14.5" class="w-full accent-blue-600">
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-24">موضع (أعلى/أسفل):</span>
-                                        <input type="range" id="ctrlPhotoY" min="0" max="100" step="0.2" value="34" class="w-full accent-blue-600">
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-24">تكبير (العرض):</span>
-                                        <input type="range" id="ctrlPhotoW" min="10" max="60" step="0.2" value="28.5" class="w-full accent-blue-600">
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-24">تكبير (الطول):</span>
-                                        <input type="range" id="ctrlPhotoH" min="10" max="60" step="0.2" value="36" class="w-full accent-blue-600">
-                                    </div>
-                                    <div class="flex items-center gap-2">
-                                        <span class="w-24">دوران الحواف:</span>
-                                        <input type="range" id="ctrlPhotoR" min="0" max="50" step="1" value="15" class="w-full accent-blue-600">
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- إعدادات النصوص -->
-                            <div class="bg-gray-50 p-4 rounded-lg border border-gray-200">
-                                <h3 class="font-bold text-sm text-gray-800 mb-3 border-b border-gray-200 pb-1">📝 إعدادات النصوص</h3>
-                                <div class="space-y-4 text-xs font-semibold text-gray-700">
-                                    
-                                    <div class="space-y-2 bg-white p-2 rounded border border-gray-100">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-24 text-red-600">موضع الاسم ↔️:</span>
-                                            <input type="range" id="ctrlTextX" min="0" max="100" step="0.2" value="28.8" class="w-full accent-red-600">
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-24">موضع الاسم ↕️:</span>
-                                            <input type="range" id="ctrlNameY" min="50" max="100" step="0.2" value="73.8" class="w-full accent-gray-600">
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-24">حجم خط الاسم:</span>
-                                            <input type="range" id="ctrlNameSize" min="1" max="10" step="0.1" value="3.5" class="w-full accent-gray-600">
-                                        </div>
-                                    </div>
-
-                                    <div class="space-y-2 bg-white p-2 rounded border border-gray-100">
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-24 text-blue-600">موضع الصفة ↔️:</span>
-                                            <input type="range" id="ctrlRoleX" min="0" max="100" step="0.2" value="28.8" class="w-full accent-blue-600">
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-24">موضع الصفة ↕️:</span>
-                                            <input type="range" id="ctrlRoleY" min="50" max="100" step="0.2" value="86" class="w-full accent-gray-600">
-                                        </div>
-                                        <div class="flex items-center gap-2">
-                                            <span class="w-24">حجم خط الصفة:</span>
-                                            <input type="range" id="ctrlRoleSize" min="1" max="10" step="0.1" value="2.1" class="w-full accent-gray-600">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ========================================================= -->
-
                     <!-- أزرار التحكم -->
-                    <div class="mt-6 space-y-3">
+                    <div class="mt-8 space-y-3">
                         <button id="downloadBtn" class="w-full bg-gray-800 hover:bg-black text-white font-bold py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center shadow-md opacity-50 cursor-not-allowed" disabled>
                             <svg class="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"></path></svg>
                             حفظ وتحميل الصورة النهائية
@@ -173,20 +99,21 @@
                 </div>
             </div>
 
-            <!-- قسم معاينة الصورة -->
-            <div class="lg:col-span-7">
-                <div class="bg-white p-4 rounded-2xl shadow-lg h-full flex flex-col">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-xl font-bold text-gray-800">المعاينة النهائية المباشرة</h2>
-                        <button id="showUploadBgBtn" class="text-xs text-blue-600 hover:underline">هل القالب لا يظهر؟ ارفع القالب يدوياً</button>
+            <!-- قسم معاينة الصورة (مُثبت في الأعلى للهاتف) -->
+            <div class="lg:col-span-7 order-1 lg:order-2 sticky top-2 z-40 h-fit">
+                <div class="bg-white p-3 lg:p-4 rounded-2xl shadow-2xl lg:shadow-lg flex flex-col ring-1 ring-gray-900/5">
+                    <div class="flex justify-between items-center mb-2 lg:mb-4">
+                        <h2 class="text-lg lg:text-xl font-bold text-gray-800">المعاينة الحية <span class="text-sm font-normal text-red-600 block lg:inline">(انقر على أي عنصر للتحكم به)</span></h2>
+                        <button id="showUploadBgBtn" class="text-xs text-blue-600 hover:underline">ارفع القالب يدوياً</button>
                     </div>
                     
-                    <div class="image-preview-container flex-grow rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center">
-                        <canvas id="resultCanvas" class="max-w-full max-h-[70vh] object-contain shadow-sm"></canvas>
+                    <div class="image-preview-container flex-grow rounded-lg overflow-hidden border border-gray-200 flex items-center justify-center relative bg-gray-100">
+                        <!-- Canvas مع استخدام Pointer Events -->
+                        <canvas id="resultCanvas" class="max-w-full max-h-[45vh] lg:max-h-[70vh] object-contain shadow-sm"></canvas>
                         
-                        <div id="canvasPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80">
-                            <svg class="w-12 h-12 text-gray-300 mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
-                            <p class="text-gray-500 font-semibold">بانتظار إدخال البيانات...</p>
+                        <div id="canvasPlaceholder" class="absolute inset-0 flex flex-col items-center justify-center bg-white/80 pointer-events-none">
+                            <svg class="w-10 h-10 lg:w-12 lg:h-12 text-gray-300 mb-2 lg:mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                            <p class="text-gray-500 font-semibold text-sm lg:text-base">بانتظار إدخال البيانات...</p>
                         </div>
                     </div>
                 </div>
@@ -207,7 +134,26 @@
         let isTemplateLoaded = false;
         let isUserImageLoaded = false;
 
-        // تحميل القالب الافتراضي
+        // ==========================================
+        // هيكل بيانات المحرر الذكي
+        // ==========================================
+        let isInitialized = false;
+        let elements = {
+            photo: { x: 0, y: 0, w: 0, h: 0, r: 16 },
+            name:  { x: 0, y: 0, size: 0, text: '' },
+            role:  { x: 0, y: 0, size: 0, text: '' }
+        };
+
+        let selectedTarget = null; // العنصر المحدد حالياً ('photo', 'name', 'role')
+        let hitBoxes = { photo: null, name: null, role: null };
+        let handles = []; // تخزين أماكن زوايا التحكم للعنصر المحدد
+
+        // متغيرات حالة السحب
+        let isDragging = false;
+        let dragAction = null; // 'move', 'resize-tl', 'resize-tr', 'resize-bl', 'resize-br'
+        let startX, startY;
+        let origEl = {}; // لتخزين أبعاد العنصر قبل بدء السحب
+
         templateImage.onload = () => {
             isTemplateLoaded = true;
             setupCanvas();
@@ -223,123 +169,328 @@
             if (!isTemplateLoaded) return;
             canvas.width = templateImage.width;
             canvas.height = templateImage.height;
+            
+            // تهيئة القيم الابتدائية (بالبكسل الفعلي للكانفاس) مرة واحدة فقط
+            if (!isInitialized) {
+                elements.photo = {
+                    x: canvas.width * 0.16, y: canvas.height * 0.40,
+                    w: canvas.width * 0.30, h: canvas.height * 0.32, r: 16
+                };
+                elements.name = {
+                    x: canvas.width * 0.31, y: canvas.height * 0.765, size: canvas.height * 0.045
+                };
+                elements.role = {
+                    x: canvas.width * 0.31, y: canvas.height * 0.86, size: canvas.height * 0.024
+                };
+                isInitialized = true;
+            }
         }
 
-        // دالة الرسم الأساسية (التي تتفاعل مع الإعدادات المتقدمة)
+        // ==========================================
+        // دالة الرسم الأساسية
+        // ==========================================
         function drawCanvas() {
             if (!isTemplateLoaded) return;
 
-            // مسح الـ Canvas ورسم الخلفية
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(templateImage, 0, 0, canvas.width, canvas.height);
+            handles = []; // تصفير المقابض
 
-            // 1. رسم الصورة الشخصية استناداً لقيم الـ Sliders
+            // 1. رسم الصورة وتحديث الـ Hitbox
             if (isUserImageLoaded) {
-                ctx.save();
-                
-                // جلب القيم من الـ Sliders (الإعدادات المتقدمة)
-                const pX = canvas.width * (parseFloat(document.getElementById('ctrlPhotoX').value) / 100);
-                const pY = canvas.height * (parseFloat(document.getElementById('ctrlPhotoY').value) / 100);
-                const pW = canvas.width * (parseFloat(document.getElementById('ctrlPhotoW').value) / 100);
-                const pH = canvas.height * (parseFloat(document.getElementById('ctrlPhotoH').value) / 100);
-                const r = parseFloat(document.getElementById('ctrlPhotoR').value);
+                let el = elements.photo;
+                hitBoxes.photo = { x: el.x, y: el.y, w: el.w, h: el.h };
 
-                // رسم مسار مستطيل بحواف دائرية لقص الصورة داخله
+                ctx.save();
                 ctx.beginPath();
-                ctx.moveTo(pX + r, pY);
-                ctx.arcTo(pX + pW, pY, pX + pW, pY + pH, r);
-                ctx.arcTo(pX + pW, pY + pH, pX, pY + pH, r);
-                ctx.arcTo(pX, pY + pH, pX, pY, r);
-                ctx.arcTo(pX, pY, pX + pW, pY, r);
+                ctx.moveTo(el.x + el.r, el.y);
+                ctx.arcTo(el.x + el.w, el.y, el.x + el.w, el.y + el.h, el.r);
+                ctx.arcTo(el.x + el.w, el.y + el.h, el.x, el.y + el.h, el.r);
+                ctx.arcTo(el.x, el.y + el.h, el.x, el.y, el.r);
+                ctx.arcTo(el.x, el.y, el.x + el.w, el.y, el.r);
                 ctx.closePath();
                 ctx.clip(); 
-
-                drawImageProp(ctx, userImage, pX, pY, pW, pH);
+                drawImageProp(ctx, userImage, el.x, el.y, el.w, el.h);
                 ctx.restore();
+            } else {
+                hitBoxes.photo = null;
             }
 
-            // 2. إعدادات النصوص
-            const name = document.getElementById('nameInput').value.trim();
-            const committee = document.getElementById('committeeInput').value.trim();
-            const gov = document.getElementById('govInput').value.trim();
+            // 2. تحديث وتجهيز نصوص الإدخال
+            const rawName = document.getElementById('nameInput').value.trim();
+            const rawCommittee = document.getElementById('committeeInput').value.trim();
+            const rawGov = document.getElementById('govInput').value.trim();
+
+            elements.name.text = rawName;
             
+            let roleText = "";
+            if (rawCommittee || rawGov) {
+                if (rawCommittee && rawGov) roleText = `عضو لجنة ${rawCommittee.replace('لجنة ', '')} - ${rawGov.replace('محافظة ', '').trim()}`;
+                else if (rawCommittee) roleText = `عضو لجنة ${rawCommittee.replace('لجنة ', '')}`;
+                else if (rawGov) roleText = `${rawGov.replace('محافظة ', '').trim()}`;
+            }
+            elements.role.text = roleText;
+
+            // إعدادات الخط العامة
             ctx.textAlign = 'center';
             ctx.textBaseline = 'middle';
-            
-            // تحديد أقصى عرض للنصوص حتى لا تتشوه
             const maxTextWidthName = canvas.width * 0.55; 
-            // إعطاء مساحة عرضية أكبر بكثير للصفة لأنها جملة طويلة ولا يجب أن تنضغط
             const maxTextWidthRole = canvas.width * 0.90; 
 
-            // جلب مركز النصوص من الإعدادات بشكل منفصل لكل منهما
-            const textX = canvas.width * (parseFloat(document.getElementById('ctrlTextX').value) / 100);
-            const roleX = canvas.width * (parseFloat(document.getElementById('ctrlRoleX').value) / 100);
+            // رسم الاسم
+            if (elements.name.text) {
+                let el = elements.name;
+                ctx.font = `900 ${el.size}px 'Cairo', sans-serif`;
+                ctx.fillStyle = '#111111';
+                ctx.fillText(el.text, el.x, el.y, maxTextWidthName);
 
-            // رسم الاسم بناءً على قيم الـ Sliders
-            if (name) {
-                const nameY = canvas.height * (parseFloat(document.getElementById('ctrlNameY').value) / 100);
-                const nameSize = canvas.height * (parseFloat(document.getElementById('ctrlNameSize').value) / 100);
-                
-                ctx.font = `900 ${nameSize}px 'Cairo', sans-serif`;
-                ctx.fillStyle = '#111111'; // لون أسود
-                ctx.fillText(name, textX, nameY, maxTextWidthName);
+                // حساب المربع الوهمي للنص لالتقاط التحديد
+                const metrics = ctx.measureText(el.text);
+                const textWidth = Math.min(metrics.width, maxTextWidthName);
+                hitBoxes.name = { x: el.x - textWidth/2, y: el.y - el.size/2, w: textWidth, h: el.size };
+            } else {
+                hitBoxes.name = null;
             }
 
-            // رسم الصفة والمحافظة بناءً على قيم الـ Sliders بدون كلمة "محافظة"
-            if (committee || gov) {
-                let roleText = "";
-                if (committee && gov) roleText = `عضو لجنة ${committee.replace('لجنة ', '')} - ${gov.replace('محافظة ', '').trim()}`;
-                else if (committee) roleText = `عضو لجنة ${committee.replace('لجنة ', '')}`;
-                else if (gov) roleText = `${gov.replace('محافظة ', '').trim()}`;
+            // رسم الصفة
+            if (elements.role.text) {
+                let el = elements.role;
+                ctx.font = `700 ${el.size}px 'Cairo', sans-serif`;
+                ctx.fillStyle = '#c79018';
+                ctx.fillText(el.text, el.x, el.y, maxTextWidthRole);
 
-                const roleY = canvas.height * (parseFloat(document.getElementById('ctrlRoleY').value) / 100);
-                const roleSize = canvas.height * (parseFloat(document.getElementById('ctrlRoleSize').value) / 100);
+                const metrics = ctx.measureText(el.text);
+                const textWidth = Math.min(metrics.width, maxTextWidthRole);
+                hitBoxes.role = { x: el.x - textWidth/2, y: el.y - el.size/2, w: textWidth, h: el.size };
+            } else {
+                hitBoxes.role = null;
+            }
 
-                // تغيير سُمك الخط إلى 700 ليكون أوضح ولا يظهر مضغوطاً أو عريضاً جداً عند التكبير
-                ctx.font = `700 ${roleSize}px 'Cairo', sans-serif`;
-                ctx.fillStyle = '#c79018'; // لون ذهبي
-                ctx.fillText(roleText, roleX, roleY, maxTextWidthRole);
+            // رسم إطار التحديد والزوايا (إذا كان هناك عنصر محدد)
+            if (selectedTarget && hitBoxes[selectedTarget]) {
+                drawSelectionBox(hitBoxes[selectedTarget]);
             }
 
             // تفعيل زر التحميل
-            if(isUserImageLoaded || name) {
+            if(isUserImageLoaded || rawName) {
                 downloadBtn.disabled = false;
                 downloadBtn.classList.remove('opacity-50', 'cursor-not-allowed');
                 downloadBtn.classList.add('hover:bg-black');
+            } else {
+                downloadBtn.disabled = true;
+                downloadBtn.classList.add('opacity-50', 'cursor-not-allowed');
+                downloadBtn.classList.remove('hover:bg-black');
             }
         }
 
-        // دالة مساعدة لضبط أبعاد الصورة (Object-fit: cover)
+        // دالة رسم مربع التحديد ذو الزوايا القابلة للسحب
+        function drawSelectionBox(box) {
+            ctx.save();
+            ctx.strokeStyle = '#2563eb'; // أزرق مميز
+            ctx.lineWidth = 3;
+            ctx.setLineDash([10, 10]); // خط متقطع
+            // إضافة مساحة تنفس (Padding) حول التحديد
+            const p = 10; 
+            ctx.strokeRect(box.x - p, box.y - p, box.w + p*2, box.h + p*2);
+
+            // رسم مقابض الزوايا (Handles)
+            const hw = 24; // حجم المقبض (كبير نسبياً لسهولة اللمس)
+            ctx.fillStyle = '#ffffff';
+            ctx.setLineDash([]); // خط متصل للمقابض
+            
+            // تخزين بيانات الزوايا لاكتشاف اللمس لاحقاً
+            handles = [
+                { id: 'tl', cx: box.x - p, cy: box.y - p }, // أعلى يسار
+                { id: 'tr', cx: box.x + box.w + p, cy: box.y - p }, // أعلى يمين
+                { id: 'bl', cx: box.x - p, cy: box.y + box.h + p }, // أسفل يسار
+                { id: 'br', cx: box.x + box.w + p, cy: box.y + box.h + p } // أسفل يمين
+            ];
+
+            handles.forEach(h => {
+                ctx.fillRect(h.cx - hw/2, h.cy - hw/2, hw, hw);
+                ctx.strokeRect(h.cx - hw/2, h.cy - hw/2, hw, hw);
+            });
+            ctx.restore();
+        }
+
         function drawImageProp(ctx, img, x, y, w, h, offsetX=0.5, offsetY=0.5) {
             var iw = img.width, ih = img.height,
-                r = Math.min(w / iw, h / ih),
-                nw = iw * r, nh = ih * r,
+                r = Math.min(w / iw, h / ih), nw = iw * r, nh = ih * r,
                 cx, cy, cw, ch, ar = 1;
-
             if (nw < w) ar = w / nw;                             
             if (Math.abs(ar - 1) < 1e-14 && nh < h) ar = h / nh;
             nw *= ar; nh *= ar;
-
             cw = iw / (nw / w); ch = ih / (nh / h);
             cx = (iw - cw) * offsetX; cy = (ih - ch) * offsetY;
-
             if (cx < 0) cx = 0; if (cy < 0) cy = 0;
             if (cw > iw) cw = iw; if (ch > ih) ch = ih;
-
             ctx.drawImage(img, cx, cy, cw, ch, x, y, w, h);
         }
 
-        // التعامل مع الإدخالات (Inputs & Sliders) للتحديث الفوري المباشر
-        const allInputs = document.querySelectorAll('input');
-        allInputs.forEach(input => {
-            input.addEventListener('input', () => {
-                if (input.type !== 'file') {
-                    drawCanvas();
+        // ==========================================
+        // نظام التفاعل الذكي (المؤشر / اللمس)
+        // ==========================================
+
+        function getPointerPos(e) {
+            const rect = canvas.getBoundingClientRect();
+            const scaleX = canvas.width / rect.width;
+            const scaleY = canvas.height / rect.height;
+            return {
+                x: (e.clientX - rect.left) * scaleX,
+                y: (e.clientY - rect.top) * scaleY
+            };
+        }
+
+        function isHit(pos, box, padding = 0) {
+            if (!box) return false;
+            return pos.x >= box.x - padding && pos.x <= box.x + box.w + padding &&
+                   pos.y >= box.y - padding && pos.y <= box.y + box.h + padding;
+        }
+
+        canvas.addEventListener('pointerdown', function(e) {
+            const pos = getPointerPos(e);
+            let hitTarget = null;
+            let hitAction = null;
+
+            // 1. التحقق أولاً: هل لمسنا إحدى زوايا العنصر المحدد حالياً؟
+            if (selectedTarget && handles.length > 0) {
+                const hw = 40; // مساحة التقاط واسعة للمقبض (Touch friendly)
+                for (let h of handles) {
+                    if (pos.x >= h.cx - hw/2 && pos.x <= h.cx + hw/2 &&
+                        pos.y >= h.cy - hw/2 && pos.y <= h.cy + hw/2) {
+                        hitTarget = selectedTarget;
+                        hitAction = 'resize-' + h.id;
+                        break;
+                    }
                 }
-            });
+            }
+
+            // 2. إذا لم نلمس زاوية، نتحقق هل لمسنا في منتصف عنصر ما (لتحريكه)
+            if (!hitTarget) {
+                // نعطي الأولوية للنصوص لكونها أصغر
+                if (isHit(pos, hitBoxes.role, 30)) hitTarget = 'role';
+                else if (isHit(pos, hitBoxes.name, 30)) hitTarget = 'name';
+                else if (isHit(pos, hitBoxes.photo, 0)) hitTarget = 'photo';
+                
+                if (hitTarget) {
+                    hitAction = 'move';
+                }
+            }
+
+            // تطبيق التحديد والإجراء
+            if (hitTarget) {
+                selectedTarget = hitTarget;
+                isDragging = true;
+                dragAction = hitAction;
+                startX = pos.x;
+                startY = pos.y;
+                
+                // حفظ أبعاد العنصر الأصلية قبل بدء السحب للمقارنة بها
+                let el = elements[selectedTarget];
+                origEl = { ...el }; 
+                
+                canvas.setPointerCapture(e.pointerId);
+                e.preventDefault();
+            } else {
+                // النقر في الفراغ يلغي التحديد
+                selectedTarget = null;
+            }
+            drawCanvas(); // إعادة الرسم لإظهار/إخفاء التحديد
         });
 
-        // التعامل مع رفع الصورة الشخصية
+        canvas.addEventListener('pointermove', function(e) {
+            // تغيير شكل الماوس حسب مكان الوقوف (لأجهزة الكمبيوتر)
+            if (!isDragging) {
+                const pos = getPointerPos(e);
+                let overHandle = false;
+                if (selectedTarget) {
+                    for (let h of handles) {
+                        if (Math.abs(pos.x - h.cx) < 20 && Math.abs(pos.y - h.cy) < 20) {
+                            overHandle = true;
+                            canvas.style.cursor = (h.id === 'tl' || h.id === 'br') ? 'nwse-resize' : 'nesw-resize';
+                            break;
+                        }
+                    }
+                }
+                if (!overHandle) {
+                    if (isHit(pos, hitBoxes.role) || isHit(pos, hitBoxes.name) || isHit(pos, hitBoxes.photo)) {
+                        canvas.style.cursor = 'move';
+                    } else {
+                        canvas.style.cursor = 'default';
+                    }
+                }
+                return;
+            }
+
+            // إذا كنا في وضع السحب
+            const pos = getPointerPos(e);
+            const dx = pos.x - startX;
+            const dy = pos.y - startY;
+            let el = elements[selectedTarget];
+
+            if (dragAction === 'move') {
+                el.x = origEl.x + dx;
+                el.y = origEl.y + dy;
+            } 
+            else if (dragAction && dragAction.startsWith('resize')) {
+                if (selectedTarget === 'photo') {
+                    // تحجيم الصورة (صندوق عادي من أعلى اليسار)
+                    if (dragAction === 'resize-br') {
+                        el.w = Math.max(50, origEl.w + dx);
+                        el.h = Math.max(50, origEl.h + dy);
+                    } else if (dragAction === 'resize-bl') {
+                        let newW = Math.max(50, origEl.w - dx);
+                        el.x = origEl.x + (origEl.w - newW);
+                        el.w = newW;
+                        el.h = Math.max(50, origEl.h + dy);
+                    } else if (dragAction === 'resize-tr') {
+                        el.w = Math.max(50, origEl.w + dx);
+                        let newH = Math.max(50, origEl.h - dy);
+                        el.y = origEl.y + (origEl.h - newH);
+                        el.h = newH;
+                    } else if (dragAction === 'resize-tl') {
+                        let newW = Math.max(50, origEl.w - dx);
+                        let newH = Math.max(50, origEl.h - dy);
+                        el.x = origEl.x + (origEl.w - newW);
+                        el.y = origEl.y + (origEl.h - newH);
+                        el.w = newW;
+                        el.h = newH;
+                    }
+                } else {
+                    // تحجيم النصوص (تكبير الخط انطلاقاً من المركز)
+                    // حساب المسافة من النقطة الأصلية للنص لزيادة/تقليل الحجم بشكل متناسق
+                    let distStart = Math.hypot(startX - origEl.x, startY - origEl.y);
+                    let distCurrent = Math.hypot(pos.x - origEl.x, pos.y - origEl.y);
+                    let scale = distCurrent / (distStart || 1); // منع القسمة على صفر
+                    
+                    el.size = Math.max(10, origEl.size * scale); // الحد الأدنى لحجم الخط 10
+                }
+            }
+
+            drawCanvas();
+        });
+
+        canvas.addEventListener('pointerup', function(e) {
+            if (isDragging) canvas.releasePointerCapture(e.pointerId);
+            isDragging = false;
+            dragAction = null;
+        });
+
+        canvas.addEventListener('pointercancel', function(e) {
+            if (isDragging) canvas.releasePointerCapture(e.pointerId);
+            isDragging = false;
+            dragAction = null;
+        });
+
+        // ==========================================
+        // الأحداث الخاصة بالإدخال والتحميل
+        // ==========================================
+
+        const allInputs = document.querySelectorAll('input[type="text"]');
+        allInputs.forEach(input => {
+            input.addEventListener('input', () => { drawCanvas(); });
+        });
+
         document.getElementById('photoInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -348,6 +499,7 @@
                 reader.onload = function(event) {
                     userImage.onload = () => {
                         isUserImageLoaded = true;
+                        selectedTarget = 'photo'; // تحديد الصورة تلقائياً لتسهيل التعديل
                         drawCanvas();
                     }
                     userImage.src = event.target.result;
@@ -356,7 +508,6 @@
             }
         });
 
-        // التعامل مع رفع القالب يدوياً
         document.getElementById('templateInput').addEventListener('change', function(e) {
             const file = e.target.files[0];
             if (file) {
@@ -382,33 +533,25 @@
         // زر التحميل
         downloadBtn.addEventListener('click', function() {
             if (isTemplateLoaded) {
-                const dataURL = canvas.toDataURL('image/jpeg', 0.95);
-                const a = document.createElement('a');
-                a.href = dataURL;
-                const userName = document.getElementById('nameInput').value.trim() || 'عضو';
-                a.download = `هوية_${userName}.jpg`;
-                document.body.appendChild(a);
-                a.click();
-                document.body.removeChild(a);
-                showStatus("تم التحميل بنجاح!", "success");
+                // 1. إلغاء التحديد لكي لا يظهر المربع والزوايا في الصورة النهائية
+                selectedTarget = null;
+                drawCanvas();
+
+                // 2. استخراج الصورة بجودة عالية
+                setTimeout(() => {
+                    const dataURL = canvas.toDataURL('image/jpeg', 0.95);
+                    const a = document.createElement('a');
+                    a.href = dataURL;
+                    const userName = document.getElementById('nameInput').value.trim() || 'عضو';
+                    a.download = `هوية_${userName}.jpg`;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    showStatus("تم التحميل بنجاح!", "success");
+                }, 50); // تأخير بسيط جداً لضمان رسم الـ Canvas بدون التحديد
             }
         });
 
-        // تشغيل/إيقاف الإعدادات المتقدمة (Toggle)
-        const toggleBtn = document.getElementById('toggleAdvancedBtn');
-        const advancedPanel = document.getElementById('advancedPanel');
-        const advancedIcon = document.getElementById('advancedIcon');
-
-        toggleBtn.addEventListener('click', () => {
-            advancedPanel.classList.toggle('hidden');
-            if(advancedPanel.classList.contains('hidden')){
-                advancedIcon.classList.remove('rotate-180');
-            } else {
-                advancedIcon.classList.add('rotate-180');
-            }
-        });
-
-        // دالة التنبيهات
         function showStatus(msg, type) {
             statusMsg.textContent = msg;
             statusMsg.classList.remove('hidden', 'bg-red-100', 'text-red-700', 'bg-green-100', 'text-green-700');
@@ -426,5 +569,4 @@
 
     </script>
 </body>
-
 </html>
